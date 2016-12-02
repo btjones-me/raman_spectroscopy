@@ -1,0 +1,12 @@
+ST or KS(dis) - A1detected in sample 22  
+ peak+ literature: 337.659334.4
+   Percentage confidence: 0.965174924998%
+KS-B(LO)detected in sample 22  
+ peak+ literature: 307.762318
+   Percentage confidence: -3.32659652589%
+KS-(TO)detected in sample 22  
+ peak+ literature: 307.762305
+   Percentage confidence: 0.897446728316%
+KS-E(LO)detected in sample 22  
+ peak+ literature: 257.045265.1
+   Percentage confidence: -3.13369254411%

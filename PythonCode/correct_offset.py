@@ -13,21 +13,21 @@ path_to_folder = "C:\\Users\\BenSurface_i5\\OneDrive\\Project\\Raman Spectroscop
 # path_to_folder = "C:\\Users\\BenSurface_i5\\OneDrive\\Project\\Raman Spectroscopy\\CZTS_data\\CZTS_111116\\B"
 samples_to_analyse = ['28']
 
-def import_data():
-    for sample_id in samples_to_analyse:
-        data_container = []
+# def import_data():
+#     for sample_id in samples_to_analyse:
+#         data_container = []
 
-        path = path_to_folder + sample_id + "\\*.txt"
-        for filename in glob.glob(path):
-            data = numpy.genfromtxt("C:\\Users\\BenSurface_i5\\OneDrive\\Project\\Raman Spectroscopy\\CZTS_data\\CZTS_291116\\CZTS-Ben488\\B" + samples_to_analyse + ".txt")
-            print(numpy.shape(data))
-            # print(data)
-            pyplot.plot(data[:,0], data[:,1], marker='.')
-            pyplot.show()
+#         path = path_to_folder + sample_id + "\\*.txt"
+#         for filename in glob.glob(path):
+#             data = numpy.genfromtxt("C:\\Users\\BenSurface_i5\\OneDrive\\Project\\Raman Spectroscopy\\CZTS_data\\CZTS_291116\\CZTS-Ben488\\B" + samples_to_analyse + ".txt")
+#             print(numpy.shape(data))
+#             # print(data)
+#             pyplot.plot(data[:,0], data[:,1], marker='.')
+#             pyplot.show()
 
-    return data_container
+#     return data_container
 
-def import_data2(samples_to_analyse):
+def import_data(samples_to_analyse):
     data_container = []
     for sample_id in samples_to_analyse:
         path = path_to_folder + sample_id + "\\*.txt"
@@ -61,6 +61,6 @@ def show_reference_graph(ref_data):
 # sulfur 473.14 is peak 
 
 reference_path = "C:\\Users\\BenSurface_i5\\OneDrive\\Project\\Raman Spectroscopy\\CZTS_data\\CZTS_291116\\CZTS-Ben488\\Reference_Sulfur_30_2 488.txt"
-import_data2(['28'])
+# import_data(['28'])
 # print(numpy.shape(import_reference_data("C:\\Users\\BenSurface_i5\\OneDrive\\Project\\Raman Spectroscopy\\CZTS_data\\CZTS_291116\\CZTS-Ben488\\Reference_Sulfur_30_2 488.txt")))
 show_reference_graph(import_reference_data(reference_path))

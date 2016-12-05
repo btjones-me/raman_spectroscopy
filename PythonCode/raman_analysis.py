@@ -60,6 +60,9 @@ def import_data(samples_to_analyse):
 def gaussian(x, height, center, width, offset):
     return height*np.exp(-(x - center)**2/(2*width**2)) + offset
 
+def lorentzian(x, amp, ctr, wid):
+    return amp*wid**2/((x-ctr)**2+wid**2)
+
 def func(x, *params):
     ''' *params of the form [center, amplitude, width ...] '''
     y = np.zeros_like(x)
@@ -67,16 +70,18 @@ def func(x, *params):
         ctr = params[i]
         amp = params[i+1]
         wid = params[i+2]
-        y = y + amp * np.exp( -((x - ctr)/wid)**2)
+        # y = y + amp * np.exp( -((x - ctr)/wid)**2)
+        y = y + amp*wid**2/((x-ctr)**2+wid**2)
     return y
 
-def fit_gaussians(guess, func, x, y):
+def fit_lorentzians(guess, func, x, y):
     # guess = [50, 10, 5, 38, 5, 3, 77, 4, 3] #These are good guesses
-    popt, pcov = curve_fit(func, x, y, p0=guess)
+    popt, pcov = curve_fit(func, x, y, p0=guess, maxfev=10000)
     print('popt:', popt)
     fit = func(x, *popt)
-    pyplot.plot(x, y)
-    pyplot.plot(x, fit , 'r-')
+    # pyplot.plot(x, y)
+    # pyplot.plot(x, fit , 'r-')
+    return (popt, fit)
     # pyplot.show()
 
 def find_peaks_peakutils(xs, ys, y_threshold=0.05, ys_min_separation=10, maxfev=20000):
@@ -167,6 +172,11 @@ def get_highest_n_peaks_sri(xs, smooth_ys, n, th=0.25):
     # print('peak_indexes_xs_ys[:,1]', peak_indexes_xs_ys[:,1])
     return get_highest_n_from_list(peak_indexes_xs_ys, n)
 
+def get_highest_n_peaks_scipy(xs, ys, n, th=0.25):
+    smooth_indexes_scipy = find_peaks_scipy(xs, ys)
+    ##take the highest 6 smooth peaks 
+    peak_indexes_xs_ys = np.asarray([list(a) for a in list(zip(xs[smooth_indexes_scipy], ys[smooth_indexes_scipy]))])
+    return get_highest_n_from_list(peak_indexes_xs_ys, n)
 
 
 def compare_peak_finding_tools(xs_ys, sample_data_num, sample_id):
@@ -217,40 +227,47 @@ def main2():
         for idx, data_set in enumerate(sample_data):
             xs = data_set[:,0]
             ys = data_set[:,1]
-            #remove the baseline
-            #average the data
-            # ######################compare_peak_finding_tools(data_set, idx, sample_id)
-    # pyplot.show()
+            pyplot.figure(figsize=(8,6))
+            pyplot.title("B" + sample_id + " Raman Scattering - #" + str(idx+1))
 
+            params, fit, ys = predict_and_plot_lorentzians(xs,ys, 5) #5 = number of peaks to fit to ##Returns modified ys for y axis scaling
+            for j in range(0, len(params), 3): 
+                ctr = params[j] 
+                amp = params[j+1]
+                width = params[j+2]
+                # def lorentzian(x, amp, ctr, wid):
+                # lorentzian = lorentzian(xs, amp, ctr, width)
+                pyplot.plot(xs, lorentzian(xs, amp, ctr, width), ls='-')
+            pyplot.plot(xs,ys, lw=1, label='data', c='black')
+            pyplot.plot(xs, fit, 'r-', label='fit', c='red', lw=2, ls='--')
+            pyplot.legend()
 
-    sample_b21_num_0 = dict_container['21'][2]
-    xs = sample_b21_num_0[:,0]
-    ys = remove_baseline(xs, sample_b21_num_0[:,1]) ##remove baseline straight away
+    pyplot.show()
+
+def predict_and_plot_lorentzians(xs, ys, n_peaks_to_find=5):
+    # pyplot.figure()
+
+    ys = remove_baseline(xs, ys) ##remove baseline straight away
     ys = 9.5*ys/np.max(ys) ##Make intensity arbitrary units
     smooth_ys = smooth(ys, 5)
 
-    n_peaks = np.asarray(get_highest_n_peaks_sri(xs, smooth_ys, 4))
+    # n_peaks = np.asarray(get_highest_n_peaks_sri(xs, smooth_ys, 5))
+    n_peaks = np.asarray(get_highest_n_peaks_scipy(xs, ys, n_peaks_to_find))
+
     pyplot.plot(n_peaks[:,0], n_peaks[:,1], ls='', marker='x', markersize=10)
     print(n_peaks)
     guess = []
     for idx, xs_ys in enumerate(n_peaks):
-        guess.append(xs_ys[0])
-        guess.append(xs_ys[1])
-        guess.append(5)
-    print(guess)
+        guess.append(xs_ys[0]) #ctr
+        guess.append(xs_ys[1]) #amp
+        guess.append(20) #width ###This could be improved by estimating the width first for a better fit
+    print('Fit Guess: ', guess)
+    # guess.append(500); guess.append(0.25); guess.append(500) #Broad lorenztian
 
-    # def fit_gaussians(guess, func, x, y):
-    # guess = [305, 8.5, 2, 259, 2, 0.5] #of the form centre, aplitude, width
     
-    fit_gaussians(guess, func, xs, ys) 
+    params, fit = fit_lorentzians(guess, func, xs, ys) ###params is the array of gaussian stuff, fit is the y's of lorentzians
 
-    ########PLOT INDIVIDUAL GAUSSIANS NEXT
-    ######### THEN CHANGE TO LORENTZIANS
-
-    # pyplot.plot(xs,ys)
-    # pyplot.plot(xs, smooth_ys)
-
-    pyplot.show()
+    return (params, fit, ys)
 
 
 def main3():
@@ -284,11 +301,6 @@ def main3():
         pyplot.legend()
 
     pyplot.show()
-
-
-
-
-
 
 
 def main():
@@ -376,7 +388,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main3()
+    main2()
 
 # i want a list of file data from each file [file1, file2, file3..] etc
 # where file1 = [ [xs], [ys] ]

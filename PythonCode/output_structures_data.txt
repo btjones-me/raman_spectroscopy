@@ -1,6 +1,0 @@
-KS-(TO)detected in sample 29  
- peak+ literature: 286.05305
-   Percentage confidence: -6.62471595875%
-ST or KS(dis) - A1detected in sample 29  
- peak+ literature: 337.311334.4
-   Percentage confidence: 0.863001799526%

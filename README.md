@@ -7,7 +7,7 @@ Author: Benjamin Jones
 
 Date: 2017
 
-(Univeristy of Durham - Department of Physics)[https://www.dur.ac.uk/physics/]
+[Univeristy of Durham - Department of Physics](https://www.dur.ac.uk/physics/)
 
 Supervisor: [Dr Douglas Halliday](https://www.dur.ac.uk/physics/staff/profiles/?id=538)
 

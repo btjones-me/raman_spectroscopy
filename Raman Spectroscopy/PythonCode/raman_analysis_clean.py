@@ -10,9 +10,7 @@ import math
 import traceback
 from collections import OrderedDict 
 
-# path_to_folder = "C:\\Users\\BenSurface_i5\\OneDrive\\Project\\Raman Spectroscopy\\CZTS_data\\CZTS_291116\\CZTS-Ben785\\B"
 path_to_folder = "..\\CZTS_data\\CZTS_111116\\B"
-# samples_to_analyse = ['21', '22']
 samples_to_analyse = ['21', '22', '23', '24', '25', '26', '27']
 
 
@@ -29,13 +27,13 @@ def import_data(samples_to_analyse, path_to_folder=path_to_folder):
             # print(filepath)
             data_from_file = np.genfromtxt(filepath)
             dict_container[sample_id].append(data_from_file)
-    # print(np.shape(dict_container['21'][0])) ##First data set from sample B21 file 0
-    # print(np.shape(data_container['21'][1][:,0])) ##xs from file 1 of the sample B21
-    # print(np.shape(data_container['21'][0][:,1])) ##ys from file 0
+    # print(np.shape(dict_container['21'][0]))  # First data set from sample B21 file 0
+    # print(np.shape(data_container['21'][1][:,0]))  # xs from file 1 of the sample B21
+    # print(np.shape(data_container['21'][0][:,1]))  # ys from file 0
     return dict_container
 
-##Not in use
 def gaussian(x, height, center, width, offset):
+    ##Not in use
     return height*np.exp(-(x - center)**2/(2*width**2)) + offset
 
 def lorentzian(x, amp, ctr, wid):
@@ -52,8 +50,8 @@ def func(x, *params):
         y = y + lorentzian(x, amp, ctr, wid)
     return y
 
-## Uses scipy curve_fit to optimise the lorentzian fitting
 def fit_lorentzians(guess, func, x, y):
+    # Uses scipy curve_fit to optimise the lorentzian fitting
     popt, pcov = curve_fit(func, x, y, p0=guess, maxfev=14000, sigma=2)
     print('popt:', popt)
     fit = func(x, *popt)
@@ -63,9 +61,9 @@ def fit_lorentzians(guess, func, x, y):
     # pyplot.show()
 
 
-##Obsolete, not used
 def find_peaks_peakutils(xs, ys, y_threshold=0.05, ys_min_separation=10, maxfev=20000, print=False):
-    indexes = peakutils.indexes(ys, thres=y_threshold, min_dist=ys_min_separation) #Threshold is a percentage, min dist is minimum distance between peaks. I'm guessing it's in units of points, ie 3 points
+    # Obsolete, not used
+    indexes = peakutils.indexes(ys, thres=y_threshold, min_dist=ys_min_separation)  # Threshold is a percentage, min dist is minimum distance between peaks. I'm guessing it's in units of points, ie 3 points
     peaks_x = peakutils.peak.interpolate(xs, ys, ind=indexes, width=2)
     if(print):
         print('*************PEAKUTILS**************')
@@ -75,14 +73,14 @@ def find_peaks_peakutils(xs, ys, y_threshold=0.05, ys_min_separation=10, maxfev=
 
 
     # pyplot.plot(xs[indexes], ys[indexes], linestyle='', marker='x', markersize='12', color='blue') #Plot peaks
-    ###plot vertical lines where peaks have been identified
+    # plot vertical lines where peaks have been identified
     for peak in peaks_x:
         pyplot.axvline(x=peak, linestyle='--')
 
     return peaks_x
 
-def remove_baseline(xs, ys, return_xs=False, degree=5): ##Returns just ys unless otherwise specified
-    ###Remove baseline with polynomial
+def remove_baseline(xs, ys, return_xs=False, degree=5): # Returns just ys unless otherwise specified
+    # Remove baseline with polynomial
     y2 = ys + np.polyval([0.001,-0.08,degree], xs)
     # y2 = ys
     base = peakutils.baseline(y2, 2)
@@ -96,8 +94,8 @@ def smooth(y, box_pts):
     y_smooth = np.convolve(y, box, mode='same')
     return y_smooth
 
-#Not perfect but seems to find the most obscure ones, I use this one
 def find_peaks_scipy(xs, ys, widths=np.arange(1,50, 0.5)):
+    # Not perfect but seems to find the most obscure ones, I use this one
     peaks = scipy.signal.find_peaks_cwt(ys, widths)#Problem
     # pyplot.plot(xs[peaks], ys[peaks], marker='+', linestyle='', markersize='12')
     print('*************PEAKSCIPY**************')
@@ -106,8 +104,8 @@ def find_peaks_scipy(xs, ys, widths=np.arange(1,50, 0.5)):
 
     return peaks 
 
-#Too sensitive to noise - not used
 def find_peaks_sri(d, th):
+    # Too sensitive to noise - not used
     '''
     returns bool array with the same shape as `d` with elemets at the position of local maxima in `d` are set to `True`
     this function simply checks if the neighbouring elements are smaller or equal and is __sensitive to noise__
@@ -120,8 +118,8 @@ def find_peaks_sri(d, th):
 
     return indices
 
-## Returns the highest peaks found by the peak finding algorithms
 def get_highest_n_from_list(a, n):
+    # Returns the highest peaks found by the peak finding algorithms
     return sorted(a, key=lambda pair: pair[1])[-n:]
 
 
@@ -154,16 +152,16 @@ def predict_and_plot_lorentzians(xs, ys, n_peaks_to_find=5):
 
     return (params, fit, ys, n_peaks)
 
-## The following code runs through each repeated measurement from all of the samples
-# and attempts to fit lorentzians to the data.
-def main_predict_fit():
 
+def main_predict_fit():
+    # The following code runs through each repeated measurement from all of the samples
+    # and attempts to fit lorentzians to the data.
     dict_container = import_data(samples_to_analyse) #global variable at present
 
     # print(np.shape(dict_container['21'][0]))#this is the first one etc
 
     ###THIS CODE GOES THROUGH ALL THE DATA 
-    for sample_id, sample_data in dict_container.items():#21, 22 etc
+    for sample_id, sample_data in dict_container.items(): # 21, 22 etc
         # print(sample_data)
         for idx, data_set in enumerate(sample_data):
             xs = data_set[:,0]
@@ -174,7 +172,7 @@ def main_predict_fit():
             pyplot.title("B" + sample_id + " Raman Scattering - #" + str(idx+1))
 
             try:
-                params, fit, ys, n_peaks = predict_and_plot_lorentzians(xs,ys, 5) #5 = number of peaks to fit to ##Returns modified ys for y axis scaling
+                params, fit, ys, n_peaks = predict_and_plot_lorentzians(xs,ys, 5) # 5 = number of peaks to fit to ##Returns modified ys for y axis scaling
                 for j in range(0, len(params), 3): 
                     ctr = params[j] 
                     amp = params[j+1]

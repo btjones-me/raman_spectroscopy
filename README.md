@@ -1,6 +1,6 @@
 # raman_spectroscopy
 
-Edit Feb 2023: I see this repo has gained a bit of traction recently, though it's fair to say I'm not overly proud of the coding standards I displayed 7 years ago - if you need help, an explanation, or some amendments, please feel free to open an issue or PR on this repo and I will review. 
+> **_NOTE:_** Edit Feb 2023: I see this repo has gained a bit of traction recently, though it's fair to say I'm not overly proud of the coding standards I displayed 7 years ago - if you need help, an explanation, or some amendments, please feel free to open an issue or PR on this repo and I will review. 
 
 
 Source code to my 2016 Master's dissertation supplementary code: Developing Sustainable Materials (CZTS) for Thin-Film Solar Devices Using Raman and Photoluminescence Spectroscopy

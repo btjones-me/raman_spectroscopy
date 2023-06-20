@@ -52,7 +52,8 @@ def func(x, *params):
 
 def fit_lorentzians(guess, func, x, y):
     # Uses scipy curve_fit to optimise the lorentzian fitting
-    popt, pcov = curve_fit(func, x, y, p0=guess, maxfev=14000, sigma=2)
+    sigma = [2] * len(y)
+    popt, pcov = curve_fit(func, x, y, p0=guess, maxfev=14000, sigma=sigma)
     print('popt:', popt)
     fit = func(x, *popt)
     # pyplot.plot(x, y)

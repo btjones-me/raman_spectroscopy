@@ -15,7 +15,7 @@ Date: 2017
 
 Supervisor: [Dr Douglas Halliday](https://www.dur.ac.uk/physics/staff/profiles/?id=538)
 
-To run, pull/clone the repo, find the raman_analysis_clean.py file inside PythonCode and run with Python 3.x installed. 
+To run, clone the repo, find the raman_analysis_clean.py file inside PythonCode and run with Python 3.7 installed. 
 
 Example plots: 
 

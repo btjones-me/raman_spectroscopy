@@ -22,7 +22,7 @@ jobs:
       - run: ruff format --check src tests
       - run: pytest -q
       - name: Run all bundled spectra
-        run: raman-analyse "Raman Spectroscopy/CZTS_data" --output results --no-plots
+        run: raman-analyse "Raman Spectroscopy/CZTS_data" --output results --no-plots --max-evaluations 100000
       - name: Execute quick-start notebook
         if: matrix.os == 'ubuntu-latest' && matrix.python == '3.12'
         run: python -c "import nbformat; from nbclient import NotebookClient; NotebookClient(nbformat.read('notebooks/quickstart.ipynb', as_version=4), timeout=120, kernel_name='python3').execute()"

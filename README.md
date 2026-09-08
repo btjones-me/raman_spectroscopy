@@ -71,8 +71,10 @@ raman-analyse my-spectrum.csv --skiprows 1 --peaks 3 --output results/my-spectru
 For every `.txt` file in a directory and its subdirectories:
 
 ```sh
-raman-analyse "Raman Spectroscopy/CZTS_data" --output results/all-samples
+raman-analyse "Raman Spectroscopy/CZTS_data" --output results/all-samples --max-evaluations 100000
 ```
+
+The original evaluation limit is 14,000. The full-dataset example and CI explicitly use 100,000: B24_6 can exhaust the original limit on some platforms. Convergence can vary with numerical libraries and hardware; increasing the limit may help, but does not make a fit physically valid. The chosen limit is recorded in each result.
 
 Use `--pattern "*.csv"` for a CSV batch, `--delimiter ";"` for semicolon-separated data, and `--no-plots` for tables only. Batch output preserves relative folders and full filenames to avoid name collisions. A failed spectrum is recorded and other files continue; the command exits nonzero if any file fails. See `raman-analyse --help` for settings.
 

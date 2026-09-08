@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "Please cite this software and record the commit and analysis settings used."
+title: "Raman spectrum analysis: baseline correction and Lorentzian peak fitting"
+authors:
+  - family-names: Jones
+    given-names: Benjamin
+type: software
+repository-code: "https://github.com/btjones-me/raman_spectroscopy"
+license: MIT

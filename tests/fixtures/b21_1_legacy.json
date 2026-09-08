@@ -1,0 +1,13 @@
+{
+  "source_commit": "f9197e24db4a87eb179307cc025d9b6c9d372b22",
+  "script_sha256": "e5561b6de327c19538592ab554e47b963595a4f313a949650069712472f49f27",
+  "sample": "Raman Spectroscopy/CZTS_data/CZTS_111116/B21/B21_1.txt",
+  "sample_sha256": "3ba70ab8053c4f6bdf31191bf7c4ff367d8e3e8670c7c498ad1db441f509e206",
+  "generation": "Original function definitions extracted with AST unchanged; manually loaded B21_1 to bypass Windows paths; remove_baseline, normalise to 9.5, predict_and_plot_lorentzians with 5 peaks. No new package functions used.",
+  "versions": {
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "PeakUtils": "1.3.5",
+    "matplotlib": "3.11.1"
+  }
+}
